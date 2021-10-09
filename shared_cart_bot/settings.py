@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
+import socket
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -115,12 +116,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.2/howto/static-files/
-
-STATIC_URL = '/static/'
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -128,8 +123,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 BOT_URL = 'https://api.telegram.org/bot%s/'
 
-AWS_ACCESS_KEY_ID = 'AKIATKHYXQJ2M22XAPX5'
-AWS_SECRET_ACCESS_KEY = '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'
+MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media')
+MEDIA_URL = 'media/'
+DEFAULT_FILE_STORAGE = 'live_and_dead_bot.storage_backends.MediaStorage'
+
+django_heroku.settings(locals(), staticfiles=False)
+if socket.gethostname() == 'MacBook-Pro.local':
+    try: import shared_cart_bot.local_settings
+    except: pass
 
 AWS_STORAGE_BUCKET_NAME = 'shared-cart-bot'
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
@@ -140,9 +141,3 @@ AWS_LOCATION = 'static'
 
 STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
-MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media')
-MEDIA_URL = 'media/'
-DEFAULT_FILE_STORAGE = 'live_and_dead_bot.storage_backends.MediaStorage'
-
-django_heroku.settings(locals(), staticfiles=False)

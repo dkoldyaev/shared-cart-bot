@@ -2,3 +2,5 @@
 /.git
 
 *.pyc
+
+shared_cart_bot/local_settings.py
